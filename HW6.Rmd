@@ -1,0 +1,123 @@
+---
+title: "HW 6"
+author: "shirin mehrazi"
+date: "3/7/2019"
+output: html_document
+---
+
+```{r}
+#setwd("~/Box/PhD,UCM/Courses/Spring 2019/ES 207/hw/R/hw6/Air quality data set") # set the working directory to data set files
+```
+
+```{r}
+library(tidyverse)
+library(readxl)  # reading the excel file
+loc <-
+  read_excel(
+    "Air quality data set/location.xls"
+  )
+loc
+
+```
+
+```{r}
+#Problem No. 9
+
+test <- loc %>%  
+  filter(str_detect(`Site Name`, "^(San|Santa)"))
+test
+
+#Problem No.10
+
+Incomp.1<-str_detect(loc$Address,"\\d{1,5}\\s\\w.\\s(\\b\\w*\\b\\s){1,2}\\w*\\.")
+Incomp.Zip<-str_detect(loc$`Zip Code`,"\\d{5}")
+Right.add.<- loc%>%
+  filter(Incomp.1,Incomp.Zip)
+Right.add.
+
+#Problem No.14
+
+library(readr, quietly = TRUE) # load readr package
+
+#-----------------------------list files in the directory----------------------------
+o3.filenames <-
+  list.files(
+    "~/Box/PhD,UCM/Courses/Spring 2019/ES 207/hw/R/Home work 4/Air quality data set",
+    pattern = ".txt"
+  )
+o3.filenames
+
+#----------------------read o3filenames with "read_delim" function and sepearate its elements with "|"---------
+o3.filelist <- lapply(o3.filenames, read_delim, delim = "|")
+
+#---------------replace function. Reomve .txt at the end of the file names---------------
+names(o3.filelist) <- gsub(".txt", "", o3.filenames)
+o3.filelist #print o3.filelist
+class(o3.filelist) # type of (o3.filelist)
+class(o3.filelist[[1]]) # o3.filelist content using the content of its first elements
+
+library(stringr)
+str_replace(o3.filenames, ".txt", "") # remove .txt using str_replace function
+
+library(dplyr)
+library(data.table)
+daily <- o3.filelist %>%
+  rbindlist() %>%
+  group_by(site = as.factor(site), date) %>%
+  summarize(o3 = mean(obs, na.rm = TRUE))
+daily
+
+library(tidyverse)
+daily.site <- daily %>%
+  left_join(loc, by = "site")
+daily.site
+
+daily.site %>%   #piping
+  filter(str_detect(`Site Name`, "Santa|San")) %>% #filtering the column "site name" to just Santa and San
+  group_by(year(date)) %>%   # Re-grouping based on year
+  summarise(mean=mean(o3))  # calculating the mean o3
+
+daily.site %>%
+  filter(str_detect(`Site Name`, "Santa|San")) %>%    
+  group_by(year(date)) %>%
+  summarise(median=median(o3))     # Caclulating the median of o3
+
+daily.site %>%
+  filter(str_detect(`Site Name`, "Santa|San")) %>%
+  group_by(year(date)) %>%
+  summarise(maximum=max(o3))      # calclutaing the max of o3 for the filtered site names
+
+daily.site %>%
+  filter(str_detect(`Site Name`, "Santa|San")) %>%
+  group_by(year(date)) %>%
+  summarise(minimum=min(o3))   #calclutaing the min. of o3 for the filtered site names
+
+
+
+# Porblem. No.15
+
+mean.of.daily<- function(data,county){data %>%
+  filter(stringr::str_detect(`County Name`, 'Merced')) %>%  # filtering the daily.site data set, the county name column to just Merced, to find out counties that has Merced in their name.
+  group_by(date)%>%  # group them by date
+  summarize(mean.daily=mean(o3,na.rm=TRUE))%>% # calc. mean of daily O3 observation
+  
+  group_by(year=year(date))%>% # group by year, which is included in date
+  
+  summarize(mean.annual=mean(mean.daily,na.rm=TRUE)) # calculate the mean of the previous data which named as mean.daily
+}
+
+annual.mean.of.day<-mean.of.daily(daily.site)
+annual.mean.of.day
+
+ggplot(annual.mean.of.day,aes(year,mean.annual))+geom_point()
+  
+
+
+
+```
+
+
+
+
+
+
