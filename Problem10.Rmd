@@ -1,0 +1,27 @@
+---
+title: "Problem 10"
+author: "shirin mehrazi"
+date: "3/13/2019"
+output: html_document
+---
+```{r}
+#setwd("~/Box/PhD,UCM/Courses/Spring 2019/ES 207/hw/R/hw6/Air quality data set") # set the working directory to data set files
+```
+
+```{r}
+library(tidyverse)
+library(readxl)  # reading the excel file
+loc <-
+  read_excel(
+    "Air quality data set/location.xls"
+  )
+loc
+
+```
+#Problem No.10
+
+Incomp.1<-str_detect(loc$Address,"\\d{1,5}\\s\\w.\\s(\\b\\w*\\b\\s){1,2}\\w*\\.")
+Incomp.Zip<-str_detect(loc$`Zip Code`,"\\d{5}")
+Right.add.<- loc%>%
+  filter(Incomp.1,Incomp.Zip)
+Right.add.

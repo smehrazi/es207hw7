@@ -1,0 +1,28 @@
+---
+title: "problem 9"
+author: "shirin mehrazi"
+date: "3/13/2019"
+output: html_document
+---
+
+```{r}
+#setwd("~/Box/PhD,UCM/Courses/Spring 2019/ES 207/hw/R/hw6/Air quality data set") # set the working directory to data set files
+```
+
+```{r}
+library(tidyverse)
+library(readxl)  # reading the excel file
+loc <-
+  read_excel(
+    "Air quality data set/location.xls"
+  )
+loc
+
+```
+
+``{r}
+#Problem No. 9
+
+test <- loc %>%  
+  filter(str_detect(`Site Name`, "^(San|Santa)"))
+test

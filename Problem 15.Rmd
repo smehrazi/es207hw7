@@ -1,0 +1,35 @@
+---
+title: "Problem 15"
+author: "shirin mehrazi"
+date: "3/13/2019"
+output: html_document
+---
+```{r}
+
+# Porblem. No.15
+
+mean.of.daily<- function(data,county){data %>%
+  filter(stringr::str_detect(`County Name`, 'Merced')) %>%  # filtering the daily.site data set, the county name column to just Merced, to find out counties that has Merced in their name.
+  group_by(date)%>%  # group them by date
+  summarize(mean.daily=mean(o3,na.rm=TRUE))%>% # calc. mean of daily O3 observation
+  
+  group_by(year=year(date))%>% # group by year, which is included in date
+  
+  summarize(mean.annual=mean(mean.daily,na.rm=TRUE)) # calculate the mean of the previous data which named as mean.daily
+}
+
+annual.mean.of.day<-mean.of.daily(daily.site)
+annual.mean.of.day
+
+ggplot(annual.mean.of.day,aes(year,mean.annual))+geom_point()
+  
+
+
+
+```
+
+
+
+
+
+
