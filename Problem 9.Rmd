@@ -26,3 +26,11 @@ loc
 test <- loc %>%  
   filter(str_detect(`Site Name`, "^(San|Santa)"))
 test
+
+## This is a much more sophisticated and reusable answer to this question than what I came up with, so really I don't think you should change anything about it. I made a list of Sans/santas, and then used subset to pull those ones out. Like this: 
+
+#sans <- c("Santa", "San")
+#match <- str_c(sans, collapse = "|")
+
+#has_san <- str_subset(loc$'Site Name', match)
+#has_san
