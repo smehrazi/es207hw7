@@ -56,6 +56,11 @@ daily.site <- daily %>%
   left_join(loc, by = "site")
 daily.site
 
+## All of these separate piping operations could be combined into one fxn, simplifying the code greatly and making it easier to apply to future data. 
+## to do this your "summarize" line could become:
+## summarize(mean(o3, na.rm = T), median(o3, na.rm =T), max(o3, na.rm = T), min(o3, na.rm = T)) 
+## This new summarize line would combine all of your lines into one.
+
 daily.site %>%   #piping
   filter(str_detect(`Site Name`, "Santa|San")) %>% #filtering the column "site name" to just Santa and San
   group_by(year(date)) %>%   # Re-grouping based on year

@@ -23,7 +23,7 @@ annual.mean.of.day
 
 ggplot(annual.mean.of.day,aes(year,mean.annual))+geom_point()
   
-
+## I really like that your code included a graph at the end, I didn't think to include that in my own code!
 
 
 ```
